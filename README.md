@@ -4,9 +4,13 @@ A web-based visualization tool to sort numbers.
 
 ![Sorting image](https://raw.githubusercontent.com/al11588/sortingvisualization/master/Sorting.png)
 
+History Page (MongoDB)
+
 ![History image](https://raw.githubusercontent.com/al11588/sortingvisualization/master/History.png)
 
-![Setting image](https://raw.githubusercontent.com/al11588/sortingvisualization/master/Setting.png)
+Settings Page
+
+![Setting image](https://raw.githubusercontent.com/al11588/sortingvisualization/master/Settings.png)
 
 # Programming Stack: 
 

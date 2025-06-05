@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Settings - Sorting Visualization</title>
+        <!-- Add CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <!-- Add our settings script -->
+        <script src="{{ url_for('static', filename='js/settings.js') }}" defer></script>
+    </head>
+    <body>
+        <div id="container">
+            <div class="header">
+                <h1>Settings</h1>
+            </div>
+            <div class="settings-panel">
+                <div class="settings-group">
+                    <h2>Display Options</h2>
+                    <div class="setting-item">
+                        <label for="themeToggle">Theme:</label>
+                        <select id="themeToggle">
+                            <option value="light">Light Mode</option>
+                            <option value="dark">Dark Mode</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="congratsToggle">Show Congratulations:</label>
+                        <input type="checkbox" id="congratsToggle" checked>
+                    </div>
+                </div>
+                <div class="settings-actions">
+                    <a href="/" class="button">Back to Visualization</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html> 

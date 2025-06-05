@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sorting Visualization</title>
+        <!-- Add CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <!-- Add Anime.js library first -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+        <!-- Add our animation script after Anime.js -->
+        <script src="{{ url_for('static', filename='js/sorting.js') }}" defer></script>
+    </head>
+    <body>
+        <div id="container">
+            <div class="header">
+                <h1>Sorting Visualization</h1>
+                <a href="/settings" class="settings-button">⚙️ Settings</a>
+            </div>
+            <div id="array-container"></div>
+            <div class="controls">
+                <button id="startBtn">Sort</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+    </body>
+</html>

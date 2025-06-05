@@ -2,7 +2,7 @@
 
 A web-based visualization tool to sort numbers.
 
-
+![Image CarAlgorithm] (https://github.com/al11588/sortingvisualization/blob/main/Sorting.png?raw=true)
 
 # Programming Stack: 
 

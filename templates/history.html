@@ -18,7 +18,16 @@
             {% endwith %}
             <div class="history-container">
                 <div class="history-actions">
-                    <button id="clearHistoryBtn" class="danger-button">Clear History</button>
+                    <div class="action-buttons">
+                        <button id="clearHistoryBtn" class="danger-button">Clear History</button>
+                        <div class="export-dropdown">
+                            <button id="exportBtn" class="secondary-button">Export ▾</button>
+                            <div class="export-dropdown-content">
+                                <a href="#" id="exportJsonBtn">Export as JSON</a>
+                                <a href="#" id="exportCsvBtn">Export as CSV</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {% if history %}
                     {% for entry in history %}
@@ -48,6 +57,23 @@
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+                const exportBtn = document.getElementById('exportBtn');
+                const exportDropdown = document.querySelector('.export-dropdown-content');
+                const exportJsonBtn = document.getElementById('exportJsonBtn');
+                const exportCsvBtn = document.getElementById('exportCsvBtn');
+                
+                // Toggle dropdown when clicking the export button
+                exportBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    exportDropdown.classList.toggle('show');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.matches('#exportBtn')) {
+                        exportDropdown.classList.remove('show');
+                    }
+                });
                 
                 clearHistoryBtn.addEventListener('click', async () => {
                     if (confirm('Are you sure you want to clear all sorting history?')) {
@@ -70,6 +96,42 @@
                             console.error('Error clearing history:', error);
                             alert('Failed to clear history. Please try again.');
                         }
+                    }
+                });
+
+                // Handle JSON export
+                exportJsonBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        const response = await fetch('/api/export/json');
+                        const data = await response.json();
+                        
+                        // Create and download the JSON file
+                        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'sorting_history.json';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                        exportDropdown.classList.remove('show');
+                    } catch (error) {
+                        console.error('Error exporting JSON:', error);
+                        alert('Failed to export JSON. Please try again.');
+                    }
+                });
+
+                // Handle CSV export
+                exportCsvBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        window.location.href = '/api/export/csv';
+                        exportDropdown.classList.remove('show');
+                    } catch (error) {
+                        console.error('Error exporting CSV:', error);
+                        alert('Failed to export CSV. Please try again.');
                     }
                 });
             });

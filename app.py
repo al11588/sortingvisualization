@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, jsonify
+from flask import Flask, render_template, url_for, request, jsonify, send_file
 from pymongo import MongoClient
 from datetime import datetime
 from bson import json_util
@@ -6,6 +6,8 @@ import json
 import atexit
 import signal
 import sys
+import csv
+import io
 
 app = Flask(__name__, static_folder='static')
 
@@ -81,6 +83,60 @@ def clear_history_endpoint():
     try:
         history_collection.delete_many({})
         return jsonify({'status': 'success'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/api/export/json')
+def export_json():
+    try:
+        # Get all history entries
+        history_entries = list(history_collection.find().sort('timestamp', -1))
+        
+        # Format the entries
+        formatted_entries = []
+        for entry in history_entries:
+            entry['_id'] = str(entry['_id'])
+            entry['timestamp'] = entry['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+            formatted_entries.append(entry)
+        
+        # Create the JSON response
+        return jsonify(formatted_entries)
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/api/export/csv')
+def export_csv():
+    try:
+        # Get all history entries
+        history_entries = list(history_collection.find().sort('timestamp', -1))
+        
+        # Create a StringIO object to write CSV data
+        si = io.StringIO()
+        writer = csv.writer(si)
+        
+        # Write headers
+        writer.writerow(['Timestamp', 'Algorithm', 'Initial Array', 'Sorted Array'])
+        
+        # Write data rows
+        for entry in history_entries:
+            writer.writerow([
+                entry['timestamp'].strftime('%Y-%m-%d %H:%M:%S'),
+                entry['algorithm'],
+                ', '.join(map(str, entry['initial_array'])),
+                ', '.join(map(str, entry['sorted_array']))
+            ])
+        
+        # Create the response
+        output = si.getvalue()
+        si.close()
+        
+        # Create a response with CSV data
+        return send_file(
+            io.BytesIO(output.encode('utf-8')),
+            mimetype='text/csv',
+            as_attachment=True,
+            download_name='sorting_history.csv'
+        )
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 

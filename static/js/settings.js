@@ -1,54 +1,33 @@
-// Let's handle theme preferences!
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    document.getElementById('themeSelect').value = savedTheme;
-}
+// Settings management module
+const settingsManager = {
+    // Initialize settings
+    init() {
+        this.initCongrats();
+        this.bindEvents();
+    },
 
-// Time to switch up the look!
-function toggleTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-}
+    // Initialize congratulations setting
+    initCongrats() {
+        const savedCongrats = localStorage.getItem('showCongrats');
+        const showCongrats = savedCongrats === null ? true : savedCongrats === 'true';
+        const congratsToggle = document.getElementById('congratsToggle');
+        if (congratsToggle) {
+            congratsToggle.checked = showCongrats;
+        }
+    },
 
-// Let's check if users want to see our celebrations
-function initCongrats() {
-    const savedCongrats = localStorage.getItem('showCongrats');
-    const showCongrats = savedCongrats === null ? true : savedCongrats === 'true';
-    document.getElementById('congratsToggle').checked = showCongrats;
-}
+    // Bind event listeners
+    bindEvents() {
+        const congratsToggle = document.getElementById('congratsToggle');
+        if (congratsToggle) {
+            congratsToggle.addEventListener('change', (e) => {
+                localStorage.setItem('showCongrats', e.target.checked);
+            });
+        }
+    }
+};
 
-// Remember their celebration preferences
-function toggleCongrats(show) {
-    localStorage.setItem('showCongrats', show);
-}
-
-// Time to set everything up when the page loads!
+// Initialize when the DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Get our theme and congratulations settings ready
-    initTheme();
-    initCongrats();
-
-    // Watch for theme changes
-    document.getElementById('themeSelect').addEventListener('change', (e) => {
-        toggleTheme(e.target.value);
-    });
-
-    // Keep an eye on those congratulations preferences
-    document.getElementById('congratsToggle').addEventListener('change', (e) => {
-        toggleCongrats(e.target.checked);
-    });
-
-    // Reset to default settings handler
-    document.getElementById('resetDefaultBtn').addEventListener('click', () => {
-        // Set default theme
-        const defaultTheme = 'light';
-        document.getElementById('themeSelect').value = defaultTheme;
-        toggleTheme(defaultTheme);
-
-        // Set default congratulations setting
-        const defaultCongrats = true;
-        document.getElementById('congratsToggle').checked = defaultCongrats;
-        toggleCongrats(defaultCongrats);
-    });
+    settingsManager.init();
 }); 

@@ -1,0 +1,21 @@
+<div class="header">
+    <h1>{{ page_title }}</h1>
+    <div class="hamburger-menu">
+        <button class="hamburger-button" id="hamburgerBtn">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="menu-items" id="menuItems">
+            {% if current_page != 'home' %}
+            <a href="/" class="menu-item">🏠 Home</a>
+            {% endif %}
+            {% if current_page != 'history' %}
+            <a href="/history" class="menu-item">📋 History</a>
+            {% endif %}
+            {% if current_page != 'settings' %}
+            <a href="/settings" class="menu-item">⚙️ Settings</a>
+            {% endif %}
+        </div>
+    </div>
+</div> 

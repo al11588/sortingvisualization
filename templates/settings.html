@@ -6,31 +6,29 @@
         <title>Settings - Sorting Visualization</title>
         <!-- Add CSS -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        <!-- Add our settings script -->
+        <!-- Add theme script first -->
+        <script src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
+        <!-- Add settings script -->
         <script src="{{ url_for('static', filename='js/settings.js') }}" defer></script>
+        <!-- Add menu script -->
+        <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
     </head>
     <body>
         <div id="container">
-            <div class="header">
-                <h1>Settings</h1>
-            </div>
-            <div class="settings-panel">
-                <div class="settings-group">
-                    <h2>Display Options</h2>
-                    <div class="setting-item">
-                        <label for="themeToggle">Theme:</label>
-                        <select id="themeToggle">
-                            <option value="light">Light Mode</option>
-                            <option value="dark">Dark Mode</option>
-                        </select>
-                    </div>
-                    <div class="setting-item">
-                        <label for="congratsToggle">Show Congratulations:</label>
-                        <input type="checkbox" id="congratsToggle" checked>
-                    </div>
+            {% with page_title='Settings', current_page='settings' %}
+            {% include 'header.html' %}
+            {% endwith %}
+            <div class="settings-container">
+                <div class="setting-item">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
                 </div>
-                <div class="settings-actions">
-                    <a href="/" class="button">Back to Visualization</a>
+                <div class="setting-item">
+                    <label for="congratsToggle">Show congratulations:</label>
+                    <input type="checkbox" id="congratsToggle" checked>
                 </div>
             </div>
         </div>

@@ -1,16 +1,10 @@
-// Let's set up our array and its properties
+// Hey! This is where we set up our array and its properties
 let array = [];
 const arraySize = 5;
-const minValue = 1;  // Starting from 1 makes it easier to read
-const maxValue = 99; // Keeping it under 100 for better visibility
+const minValue = 1;  // Starting from 1 makes things easier to read
+const maxValue = 99; // Keeping numbers under 100 so they're nice and visible
 
-// Handle the theme preference
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-}
-
-// Create a fresh random array to work with
+// Let's create a fresh random array to play with
 function generateArray() {
     array = Array.from({length: arraySize}, () => 
         Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue
@@ -63,7 +57,7 @@ function removeArrows() {
     document.querySelectorAll('.arrow').forEach(arrow => arrow.remove());
 }
 
-// Put the numbers on screen and set up their input fields
+// Time to put our numbers on screen and set up their input boxes
 function displayArray() {
     const container = document.getElementById('array-container');
     container.innerHTML = '';
@@ -83,18 +77,18 @@ function displayArray() {
         input.max = 99;
         input.dataset.index = index;
         
-        // Let users type in their own numbers
+        // Let's make it interactive - users can type their own numbers
         input.addEventListener('change', (e) => {
             const newValue = parseInt(e.target.value);
             const index = parseInt(e.target.dataset.index);
             
-            // Make sure the number makes sense
+            // Oops! Let's make sure the number makes sense
             if (isNaN(newValue) || newValue < 1 || newValue > 99) {
                 e.target.value = array[index];
                 return;
             }
             
-            // Update what's shown on screen
+            // Great! Update what's shown on screen
             array[index] = newValue;
             const numberElement = e.target.parentNode.querySelector('.number');
             numberElement.textContent = newValue;
@@ -115,21 +109,22 @@ function updateDisplay() {
     updateMinMaxArrows();
 }
 
-// Here's where the magic happens - Selection Sort
+// Here comes the magic - Selection Sort! 🎩✨
 async function selectionSort() {
+    const initialArray = [...array]; // Let's keep track of where we started
     const n = array.length;
 
     for (let i = 0; i < n - 1; i++) {
         let minIdx = i;
         
-        // Look for the smallest number in the unsorted part
+        // Time to hunt for the smallest number in the unsorted part
         for (let j = i + 1; j < n; j++) {
             if (array[j] < array[minIdx]) {
                 minIdx = j;
             }
         }
         
-        // Swap if we found a smaller number
+        // Found a smaller number? Let's swap them!
         if (minIdx !== i) {
             const temp = array[i];
             array[i] = array[minIdx];
@@ -138,13 +133,16 @@ async function selectionSort() {
         }
     }
     
-    // All done! Show a nice message
+    // Nice! Let's save this sorting achievement for posterity
+    await saveSortingHistory(initialArray, array, 'Selection Sort');
+    
+    // Time to celebrate! 🎉
     showCompletionMessage();
 }
 
-// Give users a pat on the back when sorting is done
+// Let's give users a virtual high-five when they're done sorting!
 function showCompletionMessage() {
-    // Check if they want to see congratulations
+    // First, let's check if they want to see our congratulations
     const showCongrats = localStorage.getItem('showCongrats');
     if (showCongrats === null || showCongrats === 'true') {
         const container = document.getElementById('container');
@@ -153,7 +151,7 @@ function showCompletionMessage() {
         message.innerHTML = '<h2>🎉 Sorted! 🎉</h2>';
         container.appendChild(message);
         
-        // Don't leave the message hanging around too long
+        // We'll keep the celebration brief - just 2 seconds
         setTimeout(() => {
             message.remove();
         }, 2000);
@@ -168,49 +166,81 @@ function toggleInputs(show) {
     });
 }
 
-// Get everything ready when the page loads
+// Alright, let's get everything ready when the page loads!
 document.addEventListener('DOMContentLoaded', () => {
-    // Set up the theme first
-    initTheme();
-    
-    // Get our initial random numbers
+    // First things first - let's get some random numbers to play with
     generateArray();
 
     const startBtn = document.getElementById('startBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // What happens when we click Sort
+    // Here's what happens when someone hits the Sort button
     startBtn.addEventListener('click', async () => {
-        // Lock the sort button while we work
+        // Hold on tight - we're going sorting!
         startBtn.disabled = true;
         
-        // Hide the input boxes during sorting
+        // Let's hide those input boxes while we work our magic
         toggleInputs(false);
         
-        // Show which numbers are biggest and smallest
+        // Time to show off which numbers are the biggest and smallest
         updateMinMaxArrows();
         
         await selectionSort();
     });
 
-    // What happens when we click Reset
+    // And here's what happens when someone wants to start fresh
     resetBtn.addEventListener('click', () => {
-        // Let's sort again!
+        // Ready for another round of sorting!
         startBtn.disabled = false;
         
-        // Bring back the input boxes
+        // Bring those input boxes back
         toggleInputs(true);
         
-        // Clean up any leftover completion message
+        // Clean up any leftover celebration messages
         const message = document.querySelector('.completion-message');
         if (message) {
             message.remove();
         }
         
-        // Clear out the arrows
+        // Wave goodbye to those arrows
         removeArrows();
         
-        // Get fresh random numbers
+        // Time for a new set of numbers!
         generateArray();
     });
-}); 
+});
+
+// Let's keep track of our sorting adventures!
+async function saveSortingHistory(initialArray, sortedArray, algorithm) {
+    try {
+        const response = await fetch('/api/save-sort', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                initial_array: initialArray,
+                sorted_array: sortedArray,
+                algorithm: algorithm
+            })
+        });
+        const data = await response.json();
+        if (data.status !== 'success') {
+            console.error('Oops! Had trouble saving our sorting history:', data.message);
+        }
+    } catch (error) {
+        console.error('Uh-oh! Something went wrong while saving our sorting history:', error);
+    }
+}
+
+async function bubbleSort(arr) {
+    const initialArray = [...arr];
+    // ... existing bubble sort code ...
+    
+    // After sorting is complete, save the history
+    await saveSortingHistory(initialArray, arr, 'Bubble Sort');
+    return arr;
+}
+
+// Add similar modifications to other sorting algorithms
+// ... existing code ... 

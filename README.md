@@ -2,7 +2,11 @@
 
 A web-based visualization tool to sort numbers.
 
-![Image Tests Tests](https://raw.githubusercontent.com/al11588/sortingvisualization/master/Sorting.png)
+![Sorting image](https://raw.githubusercontent.com/al11588/sortingvisualization/master/Sorting.png)
+
+![History image](https://raw.githubusercontent.com/al11588/sortingvisualization/master/History.png)
+
+![Setting image](https://raw.githubusercontent.com/al11588/sortingvisualization/master/Setting.png)
 
 # Programming Stack: 
 
@@ -12,6 +16,8 @@ A web-based visualization tool to sort numbers.
 *	**Python Packages Used**: Flask.
 
 *	**JavaScript Libraries Used**: JQuery.
+
+*	**Databases Used**: MongoDB.
 
 
 

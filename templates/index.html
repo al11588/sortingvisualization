@@ -6,17 +6,20 @@
         <title>Sorting Visualization</title>
         <!-- Add CSS -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        <!-- Add Anime.js library first -->
+        <!-- Add theme script first -->
+        <script src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
+        <!-- Add Anime.js library -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-        <!-- Add our animation script after Anime.js -->
+        <!-- Add our animation script -->
         <script src="{{ url_for('static', filename='js/sorting.js') }}" defer></script>
+        <!-- Add menu script -->
+        <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
     </head>
     <body>
         <div id="container">
-            <div class="header">
-                <h1>Sorting Visualization</h1>
-                <a href="/settings" class="settings-button">⚙️ Settings</a>
-            </div>
+            {% with page_title='Sorting Visualization', current_page='home' %}
+            {% include 'header.html' %}
+            {% endwith %}
             <div id="array-container"></div>
             <div class="controls">
                 <button id="startBtn">Sort</button>

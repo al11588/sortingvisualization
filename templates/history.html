@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sorting History - Sorting Visualization</title>
+        <!-- Add CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <!-- Add theme script first -->
+        <script src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
+        <!-- Add menu script -->
+        <script src="{{ url_for('static', filename='js/menu.js') }}" defer></script>
+    </head>
+    <body>
+        <div id="container">
+            {% with page_title='Sorting History', current_page='history' %}
+            {% include 'header.html' %}
+            {% endwith %}
+            <div class="history-container">
+                <div class="history-actions">
+                    <button id="clearHistoryBtn" class="danger-button">Clear History</button>
+                </div>
+                {% if history %}
+                    {% for entry in history %}
+                        <div class="history-entry">
+                            <div class="history-info">
+                                <div class="algorithm">{{ entry.algorithm }}</div>
+                                <div class="timestamp">{{ entry.timestamp }}</div>
+                            </div>
+                            <div class="array-display">
+                                <div class="initial-array">
+                                    <h3>Initial Array</h3>
+                                    <div class="array-numbers">[{{ entry.initial_array }}]</div>
+                                </div>
+                                <div class="final-array">
+                                    <h3>Sorted Array</h3>
+                                    <div class="array-numbers">[{{ entry.sorted_array }}]</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-history">No sorting history available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+                
+                clearHistoryBtn.addEventListener('click', async () => {
+                    if (confirm('Are you sure you want to clear all sorting history?')) {
+                        try {
+                            const response = await fetch('/api/clear-history', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                // Refresh the page to show empty history
+                                window.location.reload();
+                            } else {
+                                alert('Failed to clear history. Please try again.');
+                            }
+                        } catch (error) {
+                            console.error('Error clearing history:', error);
+                            alert('Failed to clear history. Please try again.');
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html> 

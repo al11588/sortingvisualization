@@ -2,7 +2,7 @@
 
 A web-based visualization tool to sort numbers.
 
-![Image Tests Tests](https://raw.githubusercontent.com/al11588/HowToUseHackernewsAPI/master/image2.png)
+![Image Tests Tests](https://raw.githubusercontent.com/al11588/sortingvisualization/master/Sorting.png)
 
 # Programming Stack: 
 

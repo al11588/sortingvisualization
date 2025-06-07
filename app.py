@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request, jsonify, send_file
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timezone
 from bson import json_util
 import json
 import atexit
@@ -17,23 +17,19 @@ db = client['sorting_visualization']
 history_collection = db['sorting_history']
 
 # Time to clean up when we're done
-def clear_history():
+def cleanup_handler(signum=None, frame=None):
     try:
         history_collection.delete_many({})
-        print("All done! Cleared the sorting history for a fresh start.")
+        print("\nAll done! Cleared the sorting history for a fresh start.")
     except Exception as e:
         print(f"Oops! Had some trouble clearing the history: {e}")
-
-# Handle different types of shutdowns
-def signal_handler(sig, frame):
-    print("\nCleaning up before shutdown...")
-    clear_history()
-    sys.exit(0)
+    if signum is not None:  # If called as signal handler
+        sys.exit(0)
 
 # Register our cleanup for different shutdown scenarios
-signal.signal(signal.SIGINT, signal_handler)  # Handle Ctrl+C
-signal.signal(signal.SIGTERM, signal_handler)  # Handle termination
-atexit.register(clear_history)  # Regular Python exit
+signal.signal(signal.SIGINT, cleanup_handler)  # Handle Ctrl+C
+signal.signal(signal.SIGTERM, cleanup_handler)  # Handle termination
+atexit.register(cleanup_handler)  # Regular Python exit
 
 @app.route('/')
 def home():
@@ -68,7 +64,7 @@ def save_sort():
         data = request.get_json()
         # Let's record this sorting achievement!
         entry = {
-            'timestamp': datetime.utcnow(),
+            'timestamp': datetime.now(timezone.utc),  # Use timezone-aware timestamp
             'algorithm': data['algorithm'],
             'initial_array': data['initial_array'],
             'sorted_array': data['sorted_array']
@@ -145,4 +141,4 @@ if __name__ == '__main__':
         app.run(debug=True)
     finally:
         # Make extra sure we clean up
-        clear_history() 
+        cleanup_handler() 

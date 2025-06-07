@@ -151,11 +151,22 @@ function showCompletionMessage() {
         message.innerHTML = '<h2>🎉 Sorted! 🎉</h2>';
         container.appendChild(message);
         
+        // Show the share button
+        const shareBtn = document.getElementById('shareBtn');
+        shareBtn.style.display = 'inline-flex';
+        
         // We'll keep the celebration brief - just 2 seconds
         setTimeout(() => {
             message.remove();
         }, 2000);
     }
+}
+
+// Share the sorting results on Twitter
+function shareOnTwitter() {
+    const text = `I sorted these numbers using Selection Sort: ${array.join(', ')} 🎉 #codingisfun #al11588  `;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(twitterUrl, '_blank');
 }
 
 // Show or hide the number input boxes
@@ -173,11 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startBtn = document.getElementById('startBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const shareBtn = document.getElementById('shareBtn');
 
     // Here's what happens when someone hits the Sort button
     startBtn.addEventListener('click', async () => {
         // Hold on tight - we're going sorting!
         startBtn.disabled = true;
+        shareBtn.style.display = 'none';
         
         // Let's hide those input boxes while we work our magic
         toggleInputs(false);
@@ -192,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', () => {
         // Ready for another round of sorting!
         startBtn.disabled = false;
+        shareBtn.style.display = 'none';
         
         // Bring those input boxes back
         toggleInputs(true);
@@ -208,6 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Time for a new set of numbers!
         generateArray();
     });
+
+    // Handle sharing to Twitter
+    shareBtn.addEventListener('click', shareOnTwitter);
 });
 
 // Let's keep track of our sorting adventures!
@@ -232,15 +249,3 @@ async function saveSortingHistory(initialArray, sortedArray, algorithm) {
         console.error('Uh-oh! Something went wrong while saving our sorting history:', error);
     }
 }
-
-async function bubbleSort(arr) {
-    const initialArray = [...arr];
-    // ... existing bubble sort code ...
-    
-    // After sorting is complete, save the history
-    await saveSortingHistory(initialArray, arr, 'Bubble Sort');
-    return arr;
-}
-
-// Add similar modifications to other sorting algorithms
-// ... existing code ... 

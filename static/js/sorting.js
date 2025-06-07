@@ -42,14 +42,16 @@ function updateMinMaxArrows() {
     `;
     containers[minIdx].appendChild(minArrow);
     
-    // Add a downward arrow for the largest number
-    const maxArrow = document.createElement('div');
-    maxArrow.className = 'arrow arrow-top max';
-    maxArrow.innerHTML = `
-        <span class="arrow-symbol">↓</span>
-        <span class="arrow-text">largest</span>
-    `;
-    containers[maxIdx].appendChild(maxArrow);
+    // Only add the largest indicator if it's the 5th number
+    if (maxIdx === 4) {
+        const maxArrow = document.createElement('div');
+        maxArrow.className = 'arrow arrow-top max';
+        maxArrow.innerHTML = `
+            <span class="arrow-symbol">↓</span>
+            <span class="arrow-text">largest</span>
+        `;
+        containers[maxIdx].appendChild(maxArrow);
+    }
 }
 
 // Clean up by removing all arrows
